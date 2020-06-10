@@ -10,7 +10,6 @@
 #import "STPopupLeftBarItem.h"
 #import "STPopupNavigationBar.h"
 #import "UIViewController+STPopup.h"
-#import "UIResponder+STPopup.h"
 #import "STPopupControllerTransitioningSlideVertical.h"
 #import "STPopupControllerTransitioningFade.h"
 
@@ -204,9 +203,6 @@ static NSMutableSet *_retainedPopupControllers;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    
-    // Observe responder change
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(firstResponderDidChange) name:STPopupFirstResponderDidChangeNotification object:nil];
 }
 
 - (void)destroyObservers
@@ -790,15 +786,6 @@ static NSMutableSet *_retainedPopupControllers;
         }
     }
     return nil;
-}
-
-#pragma mark - STPopupFirstResponderDidChangeNotification
-
-- (void)firstResponderDidChange
-{
-    // "keyboardWillShow" won't be called if height of keyboard is not changed
-    // Manually adjust container view origin according to last keyboard info
-    [self adjustContainerViewOrigin];
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate
